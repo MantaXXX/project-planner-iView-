@@ -6,10 +6,19 @@
         <router-link :to="{ name: 'EditProject', params: { id: project.id } }">
           <span class="material-icons"> edit </span>
         </router-link>
-        <span class="material-icons" @click="projectDelete"> delete </span>
+        <span class="material-icons" @click="modal = true"> delete </span>
         <span class="material-icons tick" @click="toggleComplete"> done </span>
       </div>
     </div>
+    <Modal
+      v-model="modal"
+      title="Common Modal dialog box title"
+      @on-ok="ok"
+      @on-cancel="cancel"
+    >
+      <p>Are you sure to delete this project?</p>
+    </Modal>
+
     <div class="details" v-if="showDetails">
       <p>{{ project.details }}</p>
     </div>
@@ -23,6 +32,7 @@ export default {
     return {
       showDetails: false,
       uri: "http://localhost:3000/project/" + this.project.id,
+      modal: false,
     };
   },
   methods: {
@@ -42,6 +52,13 @@ export default {
       })
         .then(() => this.$emit("complete", this.project.id))
         .catch((err) => console.log(err.message));
+    },
+    ok() {
+      this.$Message.info("Project deleted");
+      this.projectDelete();
+    },
+    cancel() {
+      this.$Message.info("Clicked cancel");
     },
   },
 };

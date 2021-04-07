@@ -1,30 +1,53 @@
 <template>
   <div class="home">
-    <FilterNav @filterChange="current = $event" :current="current" />
-    <div v-if="projects.length">
-      <div v-for="project in filteredProjects" :key="project.id">
-        <SingleProject
-          :project="project"
-          @delete="handleDelete"
-          @complete="handleComplete"
-        />
-      </div>
-    </div>
+    <Tabs value="all" @on-click="filteredProjects">
+      <TabPane label="View All" name="all">
+        <div v-for="project in filters" :key="project.id">
+          <SingleProject
+            :project="project"
+            @delete="handleDelete"
+            @complete="handleComplete"
+          />
+        </div>
+      </TabPane>
+      <TabPane label="COMPLETED" name="completed">
+        <div v-if="projects.length">
+          <div v-for="project in filters" :key="project.id">
+            <SingleProject
+              :project="project"
+              @delete="handleDelete"
+              @complete="handleComplete"
+            />
+          </div>
+        </div>
+      </TabPane>
+      <TabPane label="ONGOING" name="ongoing">
+        <div v-if="projects.length">
+          <div v-for="project in filters" :key="project.id">
+            <SingleProject
+              :project="project"
+              @delete="handleDelete"
+              @complete="handleComplete"
+            />
+          </div>
+        </div>
+      </TabPane>
+    </Tabs>
   </div>
 </template>
 
 <script>
 import SingleProject from "../components/SingleProject";
-import FilterNav from "../components/FilterNav";
 
 export default {
   name: "Home",
-  // register components
-  components: { SingleProject, FilterNav },
+
+  components: { SingleProject },
   data() {
     return {
       projects: [],
-      current: "all",
+      current: "",
+      filter: "all",
     };
   },
   mounted() {
@@ -45,9 +68,12 @@ export default {
       });
       target.complete = !target.complete;
     },
+    filteredProjects(status) {
+      this.current = status;
+    },
   },
   computed: {
-    filteredProjects() {
+    filters(name) {
       if (this.current === "completed") {
         return this.projects.filter((project) => project.complete);
       } else if (this.current === "ongoing") {
