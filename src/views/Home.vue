@@ -47,7 +47,6 @@ export default {
     return {
       projects: [],
       current: "",
-      filter: "all",
     };
   },
   mounted() {
