@@ -1,10 +1,10 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form>
     <label>Title:</label>
     <input type="text" v-model="title" required />
     <label>Details:</label>
     <textarea v-model="details" required></textarea>
-    <button>Create</button>
+    <button @click="handleSubmit">Create</button>
   </form>
 </template>
 
